@@ -1,3 +1,57 @@
+import networkx as nx
+
+from database.DAO import DAO
+
+
 class Model:
     def __init__(self):
-        pass
+        self._grafo = nx.Graph()
+        self._nodi = DAO.getAllRetailers()
+        self._idMap = {}
+        for f in self._nodi:
+            self._idMap[f.Retailer_code] = f
+        self._volume = {}
+
+    def buildGraph(self, year, country):
+        self._grafo.clear()
+        for nod in self._nodi:
+            if nod.Country == country:
+                self._grafo.add_node(nod)
+        self.addEdges(year)
+
+    def addEdges(self, year):
+        self._grafo.clear_edges()
+        for v1 in self._grafo.nodes:
+            for v2 in self._grafo.nodes:
+                if v1.Retailer_code != v2.Retailer_code:
+                    print(v1)
+                    if self._grafo.has_edge(v1, v2) is False:
+                        peso = DAO.getPesi(v1, v2, year)
+                        print(peso)
+                        if peso > 0:
+                            self._grafo.add_edge(v1, v2, weight=peso)
+        self.getVolumeVendita()
+
+    def getRetailers(self):
+        retailers = DAO.getAllRetailers()
+        stati = set()
+        for ret in retailers:
+            stati.add(ret.Country)
+        return stati
+
+    def getNumEdges(self):
+        return len(self._grafo.edges)
+
+    def getNumNodes(self):
+        return len(self._grafo.nodes)
+
+    def getVolumeVendita(self):
+        self._volume = {}
+        for v0 in self._grafo.nodes:
+            vicini = self._grafo.neighbors(v0)
+            sommaPesi = 0
+            for v in vicini:
+                sommaPesi += self._grafo[v][v0]['weight']
+            if sommaPesi != 0:
+                self._volume[v0.Retailer_code] = sommaPesi
+        return self._volume

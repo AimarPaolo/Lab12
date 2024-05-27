@@ -50,7 +50,7 @@ class View(ft.UserControl):
         self._page.update()
 
 
-        self.btn_volume = ft.ElevatedButton(text="Calcola Volumi", on_click=self._controller.handle_volume)
+        self.btn_volume = ft.ElevatedButton(text="Calcola Volumi", on_click=self._controller.handle_volume, disabled=True)
         row2 = ft.Row([self.btn_volume],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
