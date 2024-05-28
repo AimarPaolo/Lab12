@@ -63,6 +63,7 @@ class Model:
                 parziale.append(x)
                 self._ricorsione(parziale, t)
                 parziale.pop()
+                #
                 return
         for n in self._grafo.neighbors(parziale[-1]):
             if n not in parziale:
