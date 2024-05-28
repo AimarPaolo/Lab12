@@ -48,4 +48,20 @@ class Controller:
         self._view.update_page()
 
     def handle_path(self, e):
-        pass
+        self._view.txtOut3.controls.clear()
+        lunghezza = self._view.txtN.value
+        try:
+            lunghezza_int = int(lunghezza)
+            if lunghezza_int < 2:
+                self._view.txtOut3.controls.append(ft.Text("ERRORE, hai inserito un intero troppo piccolo!!"))
+                self._view.update_page()
+                return
+        except ValueError:
+            self._view.txtOut3.controls.append(ft.Text("ERRORE, hai inserito una stringa e non un intero!!"))
+            self._view.update_page()
+            return
+        cammino_mejor = self._model.getCamminoOttimo(lunghezza_int)
+        print(cammino_mejor)
+        self._view.txtOut3.controls.append(ft.Text("Peso cammino massimo: "))
+
+        self._view.update_page()
