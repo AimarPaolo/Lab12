@@ -14,6 +14,7 @@ class Model:
             self._idMap[f.Retailer_code] = f
         self._volume = {}
         self._bestPath = []
+        self._pesoMax = 0
 
     def buildGraph(self, year, country):
         self._grafo.clear()
@@ -44,26 +45,25 @@ class Model:
 
     def getCamminoOttimo(self, t):
         self._bestPath = []
-        parziale = []
-        self._ricorsione(parziale, t)
-        return self._bestPath
+        for x in self._grafo.nodes:
+            parziale = [x]
+            self._ricorsione(parziale, t)
+        return self._bestPath, self._pesoMax
 
     def _ricorsione(self, parziale, t):
-        if len(parziale) == t:
+        if len(parziale) == t :
             if self.getPeso(parziale) > self.getPeso(self._bestPath):
+                self._pesoMax = self.getPeso(parziale)
                 self._bestPath = copy.deepcopy(parziale)
             return
-        if len(parziale) == t-1:
-            parziale.append(parziale[0])
-            self._ricorsione(parziale, t)
-            parziale.pop()
-            return
-        if len(parziale) == 0:
-            for x in self._grafo.nodes:
-                parziale.append(x)
-                self._ricorsione(parziale, t)
+        if len(parziale) == t - 1:
+            vicini = self._grafo.neighbors(parziale[-1])
+            if parziale[0] in vicini:
+                parziale.append(parziale[0])
+                if self.getPeso(parziale) > self.getPeso(self._bestPath):
+                    self._pesoMax = self.getPeso(parziale)
+                    self._bestPath = copy.deepcopy(parziale)
                 parziale.pop()
-                #
                 return
         for n in self._grafo.neighbors(parziale[-1]):
             if n not in parziale:
@@ -74,7 +74,6 @@ class Model:
     def getPeso(self, parziale):
         peso = 0
         for i in range(len(parziale)-1):
-            print(parziale[i], parziale[i+1])
             peso += self._grafo[parziale[i]][parziale[i+1]]['weight']
         return peso
 

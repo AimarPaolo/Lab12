@@ -60,8 +60,8 @@ class Controller:
             self._view.txtOut3.controls.append(ft.Text("ERRORE, hai inserito una stringa e non un intero!!"))
             self._view.update_page()
             return
-        cammino_mejor = self._model.getCamminoOttimo(lunghezza_int)
-        print(cammino_mejor)
+        cammino_mejor, peso_mejor = self._model.getCamminoOttimo(lunghezza_int)
+        print(cammino_mejor, peso_mejor)
         self._view.txtOut3.controls.append(ft.Text("Peso cammino massimo: "))
 
         self._view.update_page()
