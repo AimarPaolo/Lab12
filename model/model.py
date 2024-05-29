@@ -28,10 +28,8 @@ class Model:
         for v1 in self._grafo.nodes:
             for v2 in self._grafo.nodes:
                 if v1.Retailer_code != v2.Retailer_code:
-                    print(v1)
                     if self._grafo.has_edge(v1, v2) is False:
                         peso = DAO.getPesi(v1, v2, year)
-                        print(peso)
                         if peso > 0:
                             self._grafo.add_edge(v1, v2, weight=peso)
         self.getVolumeVendita()
@@ -51,12 +49,12 @@ class Model:
         return self._bestPath, self._pesoMax
 
     def _ricorsione(self, parziale, t):
-        if len(parziale) == t :
+        if len(parziale) == t + 1 :
             if self.getPeso(parziale) > self.getPeso(self._bestPath):
                 self._pesoMax = self.getPeso(parziale)
                 self._bestPath = copy.deepcopy(parziale)
             return
-        if len(parziale) == t - 1:
+        if len(parziale) == t:
             vicini = self._grafo.neighbors(parziale[-1])
             if parziale[0] in vicini:
                 parziale.append(parziale[0])

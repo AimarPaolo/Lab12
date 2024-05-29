@@ -61,7 +61,8 @@ class Controller:
             self._view.update_page()
             return
         cammino_mejor, peso_mejor = self._model.getCamminoOttimo(lunghezza_int)
-        print(cammino_mejor, peso_mejor)
-        self._view.txtOut3.controls.append(ft.Text("Peso cammino massimo: "))
+        self._view.txtOut3.controls.append(ft.Text(f"Peso cammino massimo: {peso_mejor}"))
+        for cm in range(len(cammino_mejor)-1):
+            self._view.txtOut3.controls.append(ft.Text(f"{cammino_mejor[cm].Retailer_name} --> {cammino_mejor[cm+1].Retailer_name}: {self._model._grafo[cammino_mejor[cm]][cammino_mejor[cm+1]]['weight']}"))
 
         self._view.update_page()
